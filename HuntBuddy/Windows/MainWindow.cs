@@ -12,9 +12,9 @@ using Dalamud.Interface.Windowing;
 
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
-using HuntBuddy.Utils;
+using HuntDate.Utils;
 
-namespace HuntBuddy.Windows;
+namespace HuntDate.Windows;
 
 /// <summary>
 /// Main plugin window.

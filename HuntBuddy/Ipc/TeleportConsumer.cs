@@ -2,7 +2,7 @@
 
 using Dalamud.Plugin.Ipc;
 
-namespace HuntBuddy.Ipc;
+namespace HuntDate.Ipc;
 
 public class TeleportConsumer: ConsumerBase {
 	public override string RequiredPlugin { get; } = "TeleporterPlugin";

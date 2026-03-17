@@ -5,6 +5,10 @@
                 ProjectDir="$(ProjectDir)"
                 OutputPath="$(OutputPath)"
                 AssemblyName="$(AssemblyName)"
+				Name="Hunt Date"
+				Author="Big Bear"
+				Description="A plugin based on HuntBuddy to track the current and upcoming hunts in FFXIV, but allows you to share bills with another person for hunting together."
+				Punchline="HuntBuddy, but with sharing!"
                 MakeZip="true"/>
     </Target>
 </Project>

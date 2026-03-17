@@ -2,7 +2,7 @@
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 
-namespace HuntBuddy;
+namespace HuntDate;
 
 public class Service {
 	[PluginService]

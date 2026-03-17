@@ -5,7 +5,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Textures;
 
-namespace HuntBuddy.Utils;
+namespace HuntDate.Utils;
 
 /// <summary>
 /// Interface utilities class.

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 using Dalamud.Configuration;
 
-namespace HuntBuddy;
+namespace HuntDate;
 
 public class Configuration: IPluginConfiguration {
 	public int Version {

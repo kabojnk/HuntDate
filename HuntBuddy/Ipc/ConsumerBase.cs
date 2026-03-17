@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace HuntBuddy.Ipc;
+namespace HuntDate.Ipc;
 public abstract class ConsumerBase {
 	public const int MS_PER_AVAILABILITY_RECHECK = 5000;
 

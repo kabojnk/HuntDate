@@ -2,7 +2,7 @@
 
 using Dalamud.Plugin.Ipc;
 
-namespace HuntBuddy.Ipc;
+namespace HuntDate.Ipc;
 
 public class EspConsumer: ConsumerBase {
 	public override string RequiredPlugin { get; } = "XivEsp";

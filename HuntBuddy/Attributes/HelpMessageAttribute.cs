@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HuntBuddy.Attributes;
+namespace HuntDate.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
 public class HelpMessageAttribute: Attribute {

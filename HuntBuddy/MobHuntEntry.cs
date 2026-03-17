@@ -1,4 +1,4 @@
-﻿namespace HuntBuddy;
+﻿namespace HuntDate;
 
 public class MobHuntEntry {
 	public string? Name { get; init; }

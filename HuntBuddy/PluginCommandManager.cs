@@ -6,9 +6,9 @@ using System.Reflection;
 using Dalamud.Game.Command;
 using Dalamud.Plugin.Services;
 
-using HuntBuddy.Attributes;
+using HuntDate.Attributes;
 
-namespace HuntBuddy;
+namespace HuntDate;
 
 public class PluginCommandManager<THost>: IDisposable {
 	private readonly ICommandManager commandManager;

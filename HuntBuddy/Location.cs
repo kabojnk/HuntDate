@@ -9,7 +9,7 @@ using Lumina.Excel.Sheets;
 
 using MapType = FFXIVClientStructs.FFXIV.Client.UI.Agent.MapType;
 
-namespace HuntBuddy;
+namespace HuntDate;
 
 public static class Location {
 	public class PositionInfo {

@@ -4,9 +4,9 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 
-using HuntBuddy.Utils;
+using HuntDate.Utils;
 
-namespace HuntBuddy.Windows;
+namespace HuntDate.Windows;
 
 /// <summary>
 /// Configuration window.
@@ -39,11 +39,11 @@ public class ConfigurationWindow: Window {
 			save |= ImGui.Checkbox("Enable XivEsp plugin integration?", ref Plugin.Instance.Configuration.EnableXivEspIntegration);
 
 			ImGui.Indent();
-			save |= ImGui.Checkbox("Set XivEsp search when using '/phb next' command?", ref Plugin.Instance.Configuration.AutoSetEspSearchOnNextHuntCommand);
+			save |= ImGui.Checkbox("Set XivEsp search when using '/huntdate next' command?", ref Plugin.Instance.Configuration.AutoSetEspSearchOnNextHuntCommand);
 			ImGui.Unindent();
 			if (ImGui.IsItemHovered()) {
 				InterfaceUtil.DrawWrappedTooltip(ImGuiHelpers.GlobalScale * BaseTooltipWidth,
-					"If enabled and XivEsp is available, the '/phb next' command will automatically set XivEsp's search"
+					"If enabled and XivEsp is available, the '/huntdate next' command will automatically set XivEsp's search"
 					+ "to the name of the chosen mark, EVEN IF you already have a custom search active.");
 			}
 
@@ -93,7 +93,7 @@ public class ConfigurationWindow: Window {
 			ref Plugin.Instance.Configuration.SuppressEliteMarkLocationWarning);
 		if (ImGui.IsItemHovered()) {
 			InterfaceUtil.DrawWrappedTooltip(ImGuiHelpers.GlobalScale * BaseTooltipWidth,
-				$"When the '/phb next' command selects a B-rank mark, a warning is printed in your chat log that {Plugin.Instance.Name}"
+				$"When the '/huntdate next' command selects a B-rank mark, a warning is printed in your chat log that {Plugin.Instance.Name}"
 				+ " DOES NOT provide locations for B-rank hunt marks. If this warning annoys you, you can turn it off.\n"
 				+ "\n"
 				+ "Do not ask for B-rank locations to be provided.");

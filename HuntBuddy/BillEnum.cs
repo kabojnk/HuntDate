@@ -1,4 +1,4 @@
-﻿namespace HuntBuddy;
+﻿namespace HuntDate;
 
 public enum BillEnum: uint {
 	ArrRank1,

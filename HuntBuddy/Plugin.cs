@@ -14,16 +14,16 @@ using Dalamud.Utility;
 
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
-using HuntBuddy.Attributes;
-using HuntBuddy.Ipc;
-using HuntBuddy.Windows;
+using HuntDate.Attributes;
+using HuntDate.Ipc;
+using HuntDate.Windows;
 
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 
 using Map = Lumina.Excel.Sheets.Map;
 
-namespace HuntBuddy;
+namespace HuntDate;
 
 public class Plugin: IDalamudPlugin {
 	public string Name => "Hunt Date";

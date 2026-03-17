@@ -26,7 +26,7 @@ using Map = Lumina.Excel.Sheets.Map;
 namespace HuntBuddy;
 
 public class Plugin: IDalamudPlugin {
-	public string Name => "Hunt Buddy";
+	public string Name => "Hunt Date";
 
 	private readonly PluginCommandManager<Plugin> commandManager;
 
@@ -72,7 +72,7 @@ public class Plugin: IDalamudPlugin {
 		this.MainWindow = new MainWindow();
 		this.ConfigurationWindow = new ConfigurationWindow();
 
-		this.WindowSystem = new WindowSystem("HuntBuddy");
+		this.WindowSystem = new WindowSystem("HuntDate");
 		this.WindowSystem.AddWindow(this.MainWindow);
 		this.WindowSystem.AddWindow(new LocalHuntsWindow());
 		this.WindowSystem.AddWindow(this.ConfigurationWindow);
@@ -317,6 +317,25 @@ public class Plugin: IDalamudPlugin {
 		this.ClientStateOnTerritoryChanged(0);
 
 		this.MobHuntEntriesReady = true;
+	}
+
+	public void MergeExternalEntries(List<MobHuntEntry> entries) {
+		foreach (MobHuntEntry entry in entries) {
+			string key = entry.ExpansionName ?? "Unknown";
+			KeyValuePair<uint, string> subKey = new(entry.TerritoryType, entry.TerritoryName ?? "Unknown");
+
+			if (!this.MobHuntEntries.ContainsKey(key)) {
+				this.MobHuntEntries[key] = [];
+			}
+
+			if (!this.MobHuntEntries[key].ContainsKey(subKey)) {
+				this.MobHuntEntries[key][subKey] = [];
+			}
+
+			if (!this.MobHuntEntries[key][subKey].Any(x => x.MobHuntId == entry.MobHuntId)) {
+				this.MobHuntEntries[key][subKey].Add(entry);
+			}
+		}
 	}
 
 	public void Dispose() {

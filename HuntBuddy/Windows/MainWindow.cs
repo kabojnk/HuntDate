@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Dalamud.Bindings.ImGui;
@@ -74,6 +76,42 @@ public class MainWindow: Window {
 
 		if (InterfaceUtil.IconButton(FontAwesomeIcon.Cog, "Config")) {
 			Plugin.Instance.OpenConfigUi();
+		}
+
+		ImGui.SameLine();
+
+		if (ImGui.Button("Share")) {
+			List<MobHuntEntry> allEntries = Plugin.Instance.MobHuntEntries
+				.SelectMany(exp => exp.Value.SelectMany(zone => zone.Value))
+				.ToList();
+			ImGui.SetClipboardText(JsonSerializer.Serialize(allEntries));
+		}
+
+		if (ImGui.IsItemHovered()) {
+			ImGui.BeginTooltip();
+			ImGui.Text("Copy your hunt marks to clipboard as JSON");
+			ImGui.EndTooltip();
+		}
+
+		ImGui.SameLine();
+
+		if (ImGui.Button("Get Date's Marks From Clipboard")) {
+			try {
+				string json = ImGui.GetClipboardText();
+				List<MobHuntEntry>? entries = JsonSerializer.Deserialize<List<MobHuntEntry>>(json);
+				if (entries != null) {
+					Plugin.Instance.MergeExternalEntries(entries);
+				}
+			}
+			catch (Exception ex) {
+				Service.PluginLog.Error($"Failed to import hunt marks from clipboard: {ex}");
+			}
+		}
+
+		if (ImGui.IsItemHovered()) {
+			ImGui.BeginTooltip();
+			ImGui.Text("Merge hunt marks from clipboard into your list");
+			ImGui.EndTooltip();
 		}
 
 		IEnumerable<KeyValuePair<string, Dictionary<KeyValuePair<uint, string>, List<MobHuntEntry>>>> expansionEntriesWithTreeNodes = Plugin.Instance

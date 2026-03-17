@@ -41,3 +41,4 @@ packages/
 !/.idea/.idea.*/.idea
 /.idea/.idea.*/.idea/*
 !/.idea/.idea.*/.idea/runConfigurations
+.claude

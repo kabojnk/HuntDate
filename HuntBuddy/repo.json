@@ -13,6 +13,7 @@
 		"DalamudApiLevel": 14,
 		"IsHide": false,
 		"IsTestingExclusive": false,
+		"IconUrl": "https://raw.githubusercontent.com/kabojnk/HuntDate/refs/heads/master/HuntBuddy/res/icon.png",
 		"DownloadLinkInstall": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.1/latest.zip",
 		"DownloadLinkTesting": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.1/latest.zip",
 		"DownloadLinkUpdate": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.1/latest.zip",

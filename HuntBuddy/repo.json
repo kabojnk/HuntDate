@@ -6,7 +6,7 @@
 		"RepoUrl": "https://github.com/kabojnk/HuntDate",
 		"Tags": [ "Hunt", "Daily", "Utility" ],
 		"Punchline": "Helps you track your daily hunt bills",
-		"InternalName": "Hunt Date",
+		"InternalName": "HuntDate",
 		"AssemblyVersion": "1.2.2.1",
 		"TestingAssemblyVersion": null,
 		"ApplicableVersion": "any",

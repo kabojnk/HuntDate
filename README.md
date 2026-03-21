@@ -1,7 +1,5 @@
-# HuntBuddy
-This plugin helps you track your daily hunt bills (Nutsy, Guildship, etc).
+# Hunt Date
+Like Hunt Buddy, but for people who want to share their hunt llists
 
 ## In-game usage
-- `/phb` brings up the main UI.
-
-![](https://github.com/sheepgomeh/huntbuddy/raw/master/res/image1.png)
+- `/huntdate` brings up the main UI.

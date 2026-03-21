@@ -1,12 +1,32 @@
 <Project Sdk="Dalamud.NET.Sdk/14.0.1">
     <PropertyGroup>
-        <AssemblyVersion>1.2.2.1</AssemblyVersion>
-        <FileVersion>$(AssemblyVersion)</FileVersion>
-        <RootNamespace>HuntDate</RootNamespace>
-        <IsPackable>false</IsPackable>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <TargetFramework>net10.0-windows</TargetFramework>
+
+
+		<Author>Your Big Bear</Author>
+		<Name>Hunt Date</Name>
+		<InternalName>HuntDate</InternalName>
+		<AssemblyVersion>1.2.2.1</AssemblyVersion>
+		<MinimumDalamudVersion>14.0.0</MinimumDalamudVersion>
+		<Punchline>HuntBuddy, but with sharing!</Punchline>
+		<Description>A plugin based on HuntBuddy to track the current and upcoming hunts in FFXIV, but allows you to share bills with another person for hunting together.</Description>
+		<ApplicableVersion>2026.3.20.0000.0000</ApplicableVersion>
+		<RepoUrl>https://github.com/kabojnk/HuntDate</RepoUrl>
+		<Tags>hunt;date</Tags>
+		<CategoryTags>debug;test</CategoryTags>
+		<DalamudApiLevel>14</DalamudApiLevel>
+		<LoadRequiredState>1</LoadRequiredState>
+		<LoadSync>true</LoadSync>
+		<CanUnloadAsync>true</CanUnloadAsync>
+		<LoadPriority>1</LoadPriority>
+		<ImageUrls>https://raw.githubusercontent.com/kabojnk/HuntDate/refs/heads/master/HuntBuddy/res/image1.png</ImageUrls>
+		<IconUrl>https://raw.githubusercontent.com/kabojnk/HuntDate/refs/heads/master/HuntBuddy/res/icon.png</IconUrl>
+		<Changelog>CHANGES!</Changelog>
+		<AcceptsFeedback>true</AcceptsFeedback>
+		<FeedbackMessage>Be nice.</FeedbackMessage>
     </PropertyGroup>
+    <ItemGroup>
+      <Content Include="repo.json" />
+    </ItemGroup>
     <ItemGroup>
       <PackageReference Update="DalamudPackager" Version="14.0.2" />
       <PackageReference Update="DotNet.ReproducibleBuilds" Version="2.0.2" />

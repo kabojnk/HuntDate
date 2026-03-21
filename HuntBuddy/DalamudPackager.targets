@@ -9,6 +9,9 @@
 				Author="Big Bear"
 				Description="A plugin based on HuntBuddy to track the current and upcoming hunts in FFXIV, but allows you to share bills with another person for hunting together."
 				Punchline="HuntBuddy, but with sharing!"
+				ImageUrls="https://raw.githubusercontent.com/kabojnk/HuntDate/refs/heads/master/HuntBuddy/res/image1.png"
+				IconUrl="https://raw.githubusercontent.com/kabojnk/HuntDate/refs/heads/master/HuntBuddy/res/icon.png"
+				Tags="hunt;date"
                 MakeZip="true"/>
     </Target>
 </Project>

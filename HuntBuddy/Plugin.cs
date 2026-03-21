@@ -128,7 +128,7 @@ public class Plugin: IDalamudPlugin {
 		this.commandManager.Dispose();
 	}
 
-	[Command("/phb")]
+	[Command("/huntdate")]
 	[HelpMessage(
 		"Toggles UI\nArguments:\nreload - Reloads data\nlocal - Toggles the local hunt marks window\nnext - Flags the next hunt target to find\nlist - list all hunt targets by expansion")]
 	public unsafe void PluginCommand(string command, string args) {
@@ -227,7 +227,7 @@ public class Plugin: IDalamudPlugin {
 				case "list":
 					if (this.MobHuntEntries.Count < 1) {
 						Service.Chat.Print(
-							"No hunt marks found. If this doesn't sound right, please use `/phb reload` and try again.");
+							"No hunt marks found. If this doesn't sound right, please use `/huntdate reload` and try again.");
 						break;
 					}
 

@@ -122,7 +122,7 @@ public class MainWindow: Window {
 				.Where(entry => {
 					bool treeOpen = ImGui.TreeNodeEx(entry.Key.Value, ImGuiTreeNodeFlags.AllowItemOverlap);
 					ImGui.SameLine();
-					int killedCount = entry.Value.Count(x => MobHunt.Instance()->GetKillCount(x.BillNumber, x.MobIndex) == x.NeededKills);
+					int killedCount = entry.Value.Count(x => !x.IsExternal && MobHunt.Instance()->GetKillCount(x.BillNumber, x.MobIndex) == x.NeededKills);
 					if (killedCount != entry.Value.Count) {
 						ImGui.Text($"({killedCount}/{entry.Value.Count})");
 					}
@@ -222,8 +222,8 @@ public class MainWindow: Window {
 						}
 					}
 
-					int currentKills = MobHunt.Instance()->GetKillCount(mobHuntEntry.BillNumber, mobHuntEntry.MobIndex);
-					ImGui.Text(mobHuntEntry.Name);
+					int currentKills = mobHuntEntry.IsExternal ? 0 : MobHunt.Instance()->GetKillCount(mobHuntEntry.BillNumber, mobHuntEntry.MobIndex);
+					ImGui.Text(mobHuntEntry.IsExternal ? $"{mobHuntEntry.Name} (date)" : mobHuntEntry.Name);
 					if (ImGui.IsItemHovered()) {
 						ImGui.PushStyleColor(ImGuiCol.PopupBg, Vector4.Zero);
 						ImGui.BeginTooltip();
@@ -233,7 +233,10 @@ public class MainWindow: Window {
 					}
 
 					ImGui.SameLine();
-					if (currentKills != mobHuntEntry.NeededKills) {
+					if (mobHuntEntry.IsExternal) {
+					ImGui.Text($"(?/{mobHuntEntry.NeededKills})");
+				}
+				else if (currentKills != mobHuntEntry.NeededKills) {
 						ImGui.Text($"({currentKills}/{mobHuntEntry.NeededKills})");
 					}
 					else {

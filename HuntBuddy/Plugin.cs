@@ -144,9 +144,9 @@ public class Plugin: IDalamudPlugin {
 					break;
 				case "next":
 					if (this.MobHuntEntries.Count > 0) {
-						bool filterPredicate(MobHuntEntry entry) => entry.IsEliteMark ||
+						bool filterPredicate(MobHuntEntry entry) => !entry.IsExternal && (entry.IsEliteMark ||
 						                                            MobHunt.Instance()->GetKillCount(entry.BillNumber,
-							                                            entry.MobIndex) < entry.NeededKills;
+							                                            entry.MobIndex) < entry.NeededKills);
 						Location.OpenType openType = Location.OpenType.None;
 						Vector3 playerLocation = Service.ObjectTable.LocalPlayer!.Position;
 						Map map = Service.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(Service.ClientState
@@ -248,6 +248,10 @@ public class Plugin: IDalamudPlugin {
 	}
 
 	public unsafe void ReloadData() {
+		List<MobHuntEntry> externalEntries = this.MobHuntEntries
+			.SelectMany(exp => exp.Value.SelectMany(zone => zone.Value))
+			.Where(e => e.IsExternal)
+			.ToList();
 		this.MobHuntEntries.Clear();
 		List<MobHuntEntry> mobHuntList = [];
 		SubrowExcelSheet<MobHuntOrder> mobHuntOrderSheet = Service.DataManager.GetSubrowExcelSheet<MobHuntOrder>();
@@ -314,6 +318,8 @@ public class Plugin: IDalamudPlugin {
 			this.MobHuntEntries[key][subKey].Add(entry);
 		}
 
+		this.MergeExternalEntries(externalEntries);
+
 		this.ClientStateOnTerritoryChanged(0);
 
 		this.MobHuntEntriesReady = true;
@@ -321,6 +327,7 @@ public class Plugin: IDalamudPlugin {
 
 	public void MergeExternalEntries(List<MobHuntEntry> entries) {
 		foreach (MobHuntEntry entry in entries) {
+			entry.IsExternal = true;
 			string key = entry.ExpansionName ?? "Unknown";
 			KeyValuePair<uint, string> subKey = new(entry.TerritoryType, entry.TerritoryName ?? "Unknown");
 

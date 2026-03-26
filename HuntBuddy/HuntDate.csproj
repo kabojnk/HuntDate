@@ -5,7 +5,7 @@
 		<Author>Your Big Bear</Author>
 		<Name>Hunt Date</Name>
 		<InternalName>HuntDate</InternalName>
-		<AssemblyVersion>1.2.2.1</AssemblyVersion>
+		<AssemblyVersion>1.2.2.2</AssemblyVersion>
 		<MinimumDalamudVersion>14.0.0</MinimumDalamudVersion>
 		<Punchline>HuntBuddy, but with sharing!</Punchline>
 		<Description>A plugin based on HuntBuddy to track the current and upcoming hunts in FFXIV, but allows you to share bills with another person for hunting together.</Description>

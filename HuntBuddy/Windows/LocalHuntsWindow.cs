@@ -52,11 +52,11 @@ public class LocalHuntsWindow: Window {
 		&& !Service.Condition.Any(ConditionFlag.WatchingCutscene, ConditionFlag.OccupiedInCutSceneEvent)
 		&& !Plugin.Instance.CurrentAreaMobHuntEntries.IsEmpty
 		&& Plugin.Instance.CurrentAreaMobHuntEntries
-			.Count(x => MobHunt.Instance()->GetKillCount(x.BillNumber, x.MobIndex) == x.NeededKills) != Plugin.Instance.CurrentAreaMobHuntEntries.Count;
+			.Count(x => !x.IsExternal && MobHunt.Instance()->GetKillCount(x.BillNumber, x.MobIndex) == x.NeededKills) != Plugin.Instance.CurrentAreaMobHuntEntries.Count;
 
 	public override unsafe void Draw() {
 		foreach (MobHuntEntry? mobHuntEntry in Plugin.Instance.CurrentAreaMobHuntEntries) {
-			int currentKills = MobHunt.Instance()->GetKillCount(mobHuntEntry.BillNumber, mobHuntEntry.MobIndex);
+			int currentKills = mobHuntEntry.IsExternal ? 0 : MobHunt.Instance()->GetKillCount(mobHuntEntry.BillNumber, mobHuntEntry.MobIndex);
 
 			if (Plugin.Instance.Configuration.HideCompletedHunts && currentKills == mobHuntEntry.NeededKills) {
 				continue;
@@ -132,7 +132,9 @@ public class LocalHuntsWindow: Window {
 				ImGui.SameLine();
 			}
 
-			ImGui.Text($"{mobHuntEntry.Name} ({currentKills}/{mobHuntEntry.NeededKills})");
+			ImGui.Text(mobHuntEntry.IsExternal
+			? $"{mobHuntEntry.Name} (date) (?/{mobHuntEntry.NeededKills})"
+			: $"{mobHuntEntry.Name} ({currentKills}/{mobHuntEntry.NeededKills})");
 
 			if (!Plugin.Instance.Configuration.ShowLocalHuntIcons) {
 				continue;

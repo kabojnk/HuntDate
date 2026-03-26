@@ -1,4 +1,6 @@
-﻿namespace HuntDate;
+﻿using System.Text.Json.Serialization;
+
+namespace HuntDate;
 
 public class MobHuntEntry {
 	public string? Name { get; init; }
@@ -24,4 +26,6 @@ public class MobHuntEntry {
 	public uint NeededKills { get; set; }
 
 	public uint Icon { get; init; }
+
+	[JsonIgnore] public bool IsExternal { get; set; }
 }

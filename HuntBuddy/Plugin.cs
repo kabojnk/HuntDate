@@ -345,6 +345,14 @@ public class Plugin: IDalamudPlugin {
 		}
 	}
 
+	public void ClearExternalEntries() {
+		foreach (Dictionary<KeyValuePair<uint, string>, List<MobHuntEntry>> zones in this.MobHuntEntries.Values) {
+			foreach (List<MobHuntEntry> mobs in zones.Values) {
+				mobs.RemoveAll(e => e.IsExternal);
+			}
+		}
+	}
+
 	public void Dispose() {
 		this.Dispose(true);
 		GC.SuppressFinalize(this);

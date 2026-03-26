@@ -114,6 +114,18 @@ public class MainWindow: Window {
 			ImGui.EndTooltip();
 		}
 
+		ImGui.SameLine();
+
+		if (ImGui.Button("Clear Date's List")) {
+			Plugin.Instance.ClearExternalEntries();
+		}
+
+		if (ImGui.IsItemHovered()) {
+			ImGui.BeginTooltip();
+			ImGui.Text("Remove all imported date's hunt marks");
+			ImGui.EndTooltip();
+		}
+
 		IEnumerable<KeyValuePair<string, Dictionary<KeyValuePair<uint, string>, List<MobHuntEntry>>>> expansionEntriesWithTreeNodes = Plugin.Instance
 			.MobHuntEntries
 			.Where(expansionEntry => ImGui.TreeNode(expansionEntry.Key));

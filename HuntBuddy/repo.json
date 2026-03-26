@@ -14,9 +14,9 @@
 		"IsHide": false,
 		"IsTestingExclusive": false,
 		"IconUrl": "https://raw.githubusercontent.com/kabojnk/HuntDate/refs/heads/master/HuntBuddy/res/icon.png",
-		"DownloadLinkInstall": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.1/latest.zip",
-		"DownloadLinkTesting": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.1/latest.zip",
-		"DownloadLinkUpdate": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.1/latest.zip",
+		"DownloadLinkInstall": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.2/latest.zip",
+		"DownloadLinkTesting": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.2/latest.zip",
+		"DownloadLinkUpdate": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.2/latest.zip",
 		"LastUpdate": "1774078625"
 	}
 ]

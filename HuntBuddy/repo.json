@@ -7,16 +7,16 @@
 		"Tags": [ "Hunt", "Daily", "Utility" ],
 		"Punchline": "Helps you track your daily hunt bills",
 		"InternalName": "HuntDate",
-		"AssemblyVersion": "1.2.2.2",
+		"AssemblyVersion": "1.2.2.3",
 		"TestingAssemblyVersion": null,
 		"ApplicableVersion": "any",
-		"DalamudApiLevel": 14,
+		"DalamudApiLevel": 15,
 		"IsHide": false,
 		"IsTestingExclusive": false,
 		"IconUrl": "https://raw.githubusercontent.com/kabojnk/HuntDate/refs/heads/master/HuntBuddy/res/icon.png",
-		"DownloadLinkInstall": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.2/latest.zip",
-		"DownloadLinkTesting": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.2/latest.zip",
-		"DownloadLinkUpdate": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.2/latest.zip",
-		"LastUpdate": "1774078625"
+		"DownloadLinkInstall": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.3/latest.zip",
+		"DownloadLinkTesting": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.3/latest.zip",
+		"DownloadLinkUpdate": "https://github.com/kabojnk/HuntDate/releases/download/1.2.2.3/latest.zip",
+		"LastUpdate": "1779441618"
 	}
 ]

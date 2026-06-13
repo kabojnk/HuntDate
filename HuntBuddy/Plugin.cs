@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -31,6 +32,11 @@ public class Plugin: IDalamudPlugin {
 	private readonly PluginCommandManager<Plugin> commandManager;
 
 	private int lastState;
+
+	// Party kill tracking for external (date's) marks
+	private long lastExternalScanTime;
+	private const long ExternalScanIntervalMs = 250; // scan 4× per second
+	private readonly Dictionary<ulong, (string Name, uint TerritoryType)> seenExternalMobs = new();
 
 	// Dictionary<string ExpansionName, Dictionary<KeyValuePair<uint MobTerritoryType, string MobTerritoryName>, List<MobHuntEntry MobsInZone>>>
 	public readonly Dictionary<string, Dictionary<KeyValuePair<uint, string>, List<MobHuntEntry>>> MobHuntEntries;
@@ -87,15 +93,25 @@ public class Plugin: IDalamudPlugin {
 	}
 
 	private unsafe void FrameworkOnUpdate(IFramework framework) {
-		if (this.lastState == MobHunt.Instance()->ObtainedFlags) {
-			return;
+		// Own hunt flag tracking — trigger a reload when the server acknowledges a kill
+		if (this.lastState != MobHunt.Instance()->ObtainedFlags) {
+			this.lastState = MobHunt.Instance()->ObtainedFlags;
+			this.PluginCommand(string.Empty, "reload");
 		}
 
-		this.lastState = MobHunt.Instance()->ObtainedFlags;
-		this.PluginCommand(string.Empty, "reload");
+		// External (date's) mob kill tracking — throttled to avoid per-frame overhead
+		long now = Environment.TickCount64;
+		if (now - this.lastExternalScanTime >= ExternalScanIntervalMs) {
+			this.lastExternalScanTime = now;
+			this.ScanForExternalKills();
+		}
 	}
 
 	private void ClientStateOnTerritoryChanged(uint e) {
+		// Discard any mob sightings from the previous zone so stale IDs don't
+		// trigger false kill counts in the new zone.
+		this.seenExternalMobs.Clear();
+
 		this.CurrentAreaMobHuntEntries.Clear();
 
 		foreach (MobHuntEntry mobHuntEntry in this.MobHuntEntries.SelectMany(
@@ -103,6 +119,58 @@ public class Plugin: IDalamudPlugin {
 						 .Where(entry => entry.Key.Key == Service.ClientState.TerritoryType)
 						 .SelectMany(entry => entry.Value))) {
 			this.CurrentAreaMobHuntEntries.Add(mobHuntEntry);
+		}
+	}
+
+	/// <summary>
+	/// Called on a throttled interval from <see cref="FrameworkOnUpdate"/>.
+	/// Watches the ObjectTable for battle NPCs whose names match incomplete
+	/// external (date's) marks in the current zone.  When a previously-seen
+	/// mob disappears it is counted as a kill and the entry's KillCount is
+	/// incremented — this works whether the player or any party member landed
+	/// the killing blow.
+	/// </summary>
+	private void ScanForExternalKills() {
+		if (!this.MobHuntEntriesReady) return;
+
+		uint currentTerritory = Service.ClientState.TerritoryType;
+
+		// Collect incomplete external entries that belong to the current zone.
+		List<MobHuntEntry> localExternal = this.MobHuntEntries
+			.SelectMany(exp => exp.Value.SelectMany(zone => zone.Value))
+			.Where(e => e.IsExternal && e.TerritoryType == currentTerritory && e.KillCount < e.NeededKills)
+			.ToList();
+
+		if (localExternal.Count == 0) {
+			this.seenExternalMobs.Clear();
+			return;
+		}
+
+		HashSet<string?> trackedNames = localExternal.Select(e => e.Name).ToHashSet();
+
+		// Build the set of mob IDs currently alive in the ObjectTable.
+		var currentIds = new HashSet<ulong>();
+		foreach (IGameObject obj in Service.ObjectTable) {
+			if (obj is IBattleChara bc && bc.CurrentHp > 0 && trackedNames.Contains(bc.Name.TextValue)) {
+				currentIds.Add(bc.GameObjectId);
+				this.seenExternalMobs.TryAdd(bc.GameObjectId, (bc.Name.TextValue, currentTerritory));
+			}
+		}
+
+		// Any mob we had seen that is no longer in the ObjectTable was killed.
+		List<ulong> goneIds = this.seenExternalMobs.Keys.Where(id => !currentIds.Contains(id)).ToList();
+		foreach (ulong id in goneIds) {
+			(string name, uint territory) = this.seenExternalMobs[id];
+			this.seenExternalMobs.Remove(id);
+
+			if (territory != currentTerritory) continue; // sanity: zone changed mid-scan
+
+			MobHuntEntry? entry = localExternal.FirstOrDefault(e => e.Name == name);
+			if (entry != null) {
+				entry.KillCount = Math.Min(entry.KillCount + 1, entry.NeededKills);
+				Service.PluginLog.Information(
+					$"[HuntDate] External kill detected: {name} ({entry.KillCount}/{entry.NeededKills})");
+			}
 		}
 	}
 
@@ -346,6 +414,7 @@ public class Plugin: IDalamudPlugin {
 	}
 
 	public void ClearExternalEntries() {
+		this.seenExternalMobs.Clear();
 		foreach (Dictionary<KeyValuePair<uint, string>, List<MobHuntEntry>> zones in this.MobHuntEntries.Values) {
 			foreach (List<MobHuntEntry> mobs in zones.Values) {
 				mobs.RemoveAll(e => e.IsExternal);

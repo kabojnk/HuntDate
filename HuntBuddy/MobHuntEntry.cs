@@ -25,6 +25,12 @@ public class MobHuntEntry {
 
 	public uint NeededKills { get; set; }
 
+	/// <summary>
+	/// For own marks: stamped with the live kill count at share time.
+	/// For external (date's) marks: the count sent by the sharer, incremented locally when party kills are detected.
+	/// </summary>
+	public uint KillCount { get; set; }
+
 	public uint Icon { get; init; }
 
 	[JsonIgnore] public bool IsExternal { get; set; }

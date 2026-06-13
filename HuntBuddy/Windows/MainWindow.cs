@@ -81,15 +81,25 @@ public class MainWindow: Window {
 		ImGui.SameLine();
 
 		if (ImGui.Button("Share")) {
-			List<MobHuntEntry> allEntries = Plugin.Instance.MobHuntEntries
+			// Only share own marks that are not yet fully completed.
+			List<MobHuntEntry> entriesToShare = Plugin.Instance.MobHuntEntries
 				.SelectMany(exp => exp.Value.SelectMany(zone => zone.Value))
+				.Where(e => !e.IsExternal &&
+				            (e.IsEliteMark || (uint)MobHunt.Instance()->GetKillCount(e.BillNumber, e.MobIndex) < e.NeededKills))
 				.ToList();
-			ImGui.SetClipboardText(JsonSerializer.Serialize(allEntries));
+
+			// Stamp each entry with the live kill count so the recipient knows progress.
+			foreach (MobHuntEntry e in entriesToShare) {
+				e.KillCount = e.IsEliteMark ? 0u : (uint)MobHunt.Instance()->GetKillCount(e.BillNumber, e.MobIndex);
+			}
+
+			ImGui.SetClipboardText(JsonSerializer.Serialize(entriesToShare));
+			ImGui.OpenPopup("HuntDate_Copied");
 		}
 
 		if (ImGui.IsItemHovered()) {
 			ImGui.BeginTooltip();
-			ImGui.Text("Copy your hunt marks to clipboard as JSON");
+			ImGui.Text("Copy incomplete hunt marks to clipboard (completed marks are excluded)");
 			ImGui.EndTooltip();
 		}
 
@@ -100,7 +110,9 @@ public class MainWindow: Window {
 				string json = ImGui.GetClipboardText();
 				List<MobHuntEntry>? entries = JsonSerializer.Deserialize<List<MobHuntEntry>>(json);
 				if (entries != null) {
+					Plugin.Instance.ClearExternalEntries(); // replace any previous list outright
 					Plugin.Instance.MergeExternalEntries(entries);
+					ImGui.OpenPopup("HuntDate_Imported");
 				}
 			}
 			catch (Exception ex) {
@@ -110,7 +122,7 @@ public class MainWindow: Window {
 
 		if (ImGui.IsItemHovered()) {
 			ImGui.BeginTooltip();
-			ImGui.Text("Merge hunt marks from clipboard into your list");
+			ImGui.Text("Replace date's marks with the list currently in your clipboard");
 			ImGui.EndTooltip();
 		}
 
@@ -234,7 +246,9 @@ public class MainWindow: Window {
 						}
 					}
 
-					int currentKills = mobHuntEntry.IsExternal ? 0 : MobHunt.Instance()->GetKillCount(mobHuntEntry.BillNumber, mobHuntEntry.MobIndex);
+					int currentKills = mobHuntEntry.IsExternal
+						? (int)mobHuntEntry.KillCount
+						: MobHunt.Instance()->GetKillCount(mobHuntEntry.BillNumber, mobHuntEntry.MobIndex);
 					ImGui.Text(mobHuntEntry.IsExternal ? $"{mobHuntEntry.Name} (date)" : mobHuntEntry.Name);
 					if (ImGui.IsItemHovered()) {
 						ImGui.PushStyleColor(ImGuiCol.PopupBg, Vector4.Zero);
@@ -245,16 +259,13 @@ public class MainWindow: Window {
 					}
 
 					ImGui.SameLine();
-					if (mobHuntEntry.IsExternal) {
-					ImGui.Text($"(?/{mobHuntEntry.NeededKills})");
-				}
-				else if (currentKills != mobHuntEntry.NeededKills) {
-						ImGui.Text($"({currentKills}/{mobHuntEntry.NeededKills})");
-					}
-					else {
+					if (currentKills >= (int)mobHuntEntry.NeededKills) {
 						ImGui.TextColored(
 							new Vector4(0f, 1f, 0f, 1f),
 							$"({currentKills}/{mobHuntEntry.NeededKills})");
+					}
+					else {
+						ImGui.Text($"({currentKills}/{mobHuntEntry.NeededKills})");
 					}
 				}
 
@@ -262,6 +273,33 @@ public class MainWindow: Window {
 			}
 
 			ImGui.TreePop();
+		}
+
+		// ── Confirmation modals ─────────────────────────────────────────────
+		ImGui.SetNextWindowPos(
+			new Vector2(ImGui.GetIO().DisplaySize.X / 2f, ImGui.GetIO().DisplaySize.Y / 2f),
+			ImGuiCond.Appearing,
+			new Vector2(0.5f, 0.5f));
+		if (ImGui.BeginPopupModal("HuntDate_Copied", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar)) {
+			InterfaceUtil.DrawCenteredText("Copied to clipboard!");
+			ImGui.Spacing();
+			float btnW = 80f * ImGui.GetIO().FontGlobalScale;
+			ImGui.SetCursorPosX((ImGui.GetContentRegionAvail().X - btnW) / 2f + ImGui.GetCursorPosX());
+			if (ImGui.Button("OK", new Vector2(btnW, 0))) ImGui.CloseCurrentPopup();
+			ImGui.EndPopup();
+		}
+
+		ImGui.SetNextWindowPos(
+			new Vector2(ImGui.GetIO().DisplaySize.X / 2f, ImGui.GetIO().DisplaySize.Y / 2f),
+			ImGuiCond.Appearing,
+			new Vector2(0.5f, 0.5f));
+		if (ImGui.BeginPopupModal("HuntDate_Imported", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar)) {
+			InterfaceUtil.DrawCenteredText("Date's marks imported!");
+			ImGui.Spacing();
+			float btnW = 80f * ImGui.GetIO().FontGlobalScale;
+			ImGui.SetCursorPosX((ImGui.GetContentRegionAvail().X - btnW) / 2f + ImGui.GetCursorPosX());
+			if (ImGui.Button("OK", new Vector2(btnW, 0))) ImGui.CloseCurrentPopup();
+			ImGui.EndPopup();
 		}
 	}
 }

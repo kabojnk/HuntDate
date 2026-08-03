@@ -7,7 +7,7 @@
 		"Tags": [ "Hunt", "Daily", "Utility" ],
 		"Punchline": "Helps you track your daily hunt bills",
 		"InternalName": "HuntDate",
-		"AssemblyVersion": "1.2.2.4",
+		"AssemblyVersion": "1.2.2.3",
 		"TestingAssemblyVersion": null,
 		"ApplicableVersion": "any",
 		"DalamudApiLevel": 15,
